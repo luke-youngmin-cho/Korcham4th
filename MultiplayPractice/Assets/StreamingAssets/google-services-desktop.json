@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "631256052782",
+    "project_id": "korcham4th-luke",
+    "storage_bucket": "korcham4th-luke.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:631256052782:android:677bc0c41297a9375d1bbf",
+        "android_client_info": {
+          "package_name": "com.korcham4thluke.multiplaypractice"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCD2N8pYQL3rhSs2mmYrjQl75BU7Ret5cY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
