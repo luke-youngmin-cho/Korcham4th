@@ -10,6 +10,7 @@ using MP.Authentication;
 using Firebase.Firestore;
 using System.Collections.Generic;
 using UnityEngine.SceneManagement;
+using MP.Utilities;
 
 
 namespace MP.UI
@@ -43,15 +44,23 @@ namespace MP.UI
                                             {
                                                 if (task.IsCanceled)
                                                 {
-                                                    UIManager.instance.Get<UIWarningWindow>()
-                                                                      .Show("Canceled login.");
+                                                    UpdateDispatcher.instance.Enqueue(() =>
+                                                    {
+                                                        UIManager.instance.Get<UIWarningWindow>()
+                                                                          .Show("Canceled login.");
+                                                    });
+                                                    
                                                     return;
                                                 }
 
                                                 if (task.IsFaulted)
                                                 {
-                                                    UIManager.instance.Get<UIWarningWindow>()
-                                                                      .Show("Faulted login.");
+                                                    UpdateDispatcher.instance.Enqueue(() =>
+                                                    {
+                                                        UIManager.instance.Get<UIWarningWindow>()
+                                                                          .Show("Faulted login.");
+                                                    });
+                                                    
                                                     return;
                                                 }
 
@@ -69,10 +78,18 @@ namespace MP.UI
 
                                                                     Debug.Log("Finished Get profile document");
 
-                                                                    if (documentDictionary?.TryGetValue("nickname", out object value) ?? false)
-                                                                        SceneManager.LoadScene("Lobby");
-                                                                    else
-                                                                        UIManager.instance.Get<UIProfileSettingWindow>().Show();
+                                                                    UpdateDispatcher.instance.Enqueue(() =>
+                                                                    {
+                                                                        if (documentDictionary?.TryGetValue("nickname", out object value) ?? false)
+                                                                        {
+                                                                            LoginInformation.nickname = (string)value;
+                                                                            SceneManager.LoadScene("Lobby");
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            UIManager.instance.Get<UIProfileSettingWindow>().Show();
+                                                                        }
+                                                                    });
                                                                 });
                                             });
             });
@@ -101,19 +118,27 @@ namespace MP.UI
                                             {
                                                 if (task.IsCanceled)
                                                 {
-                                                    UIManager.instance.Get<UIWarningWindow>()
-                                                                      .Show("Canceled registration.");
+                                                    UpdateDispatcher.instance.Enqueue(() =>
+                                                    {
+                                                        UIManager.instance.Get<UIWarningWindow>()
+                                                                          .Show("Canceled registration.");
+                                                    });
+                                                    
                                                     return;
                                                 }
 
                                                 if (task.IsFaulted)
                                                 {
-                                                    UIManager.instance.Get<UIWarningWindow>()
-                                                                      .Show($"Faulted registration. {task.Exception.Message}");
+                                                    UpdateDispatcher.instance.Enqueue(() =>
+                                                    {
+                                                        UIManager.instance.Get<UIWarningWindow>()
+                                                                          .Show($"Faulted registration. {task.Exception.Message}");
+                                                    });
+                                                    
                                                     return;
                                                 }
 
-                                                // todo -> »∏ø¯∞°¿‘ º∫∞¯ø° ¥Î«— æÀ∏≤√¢ ∆Àæ˜
+                                                // todo -> ÌöåÏõêÍ∞ÄÏûÖ ÏÑ±Í≥µÏóê ÎåÄÌïú ÏïåÎ¶ºÏ∞Ω ÌåùÏóÖ
                                             });
             });
         }

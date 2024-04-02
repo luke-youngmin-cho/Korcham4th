@@ -1,4 +1,4 @@
-﻿namespace MP.UI
+namespace MP.UI
 {
     public class UIScreenBase : UIBase
     {
@@ -7,6 +7,13 @@
             base.Awake();
 
             UIManager.instance.RegisterScreen(this);
+        }
+
+        public override void Show()
+        {
+            base.Show();
+
+            UIManager.instance.SetScreen(this);
         }
     }
 }

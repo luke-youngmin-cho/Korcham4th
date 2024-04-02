@@ -175,6 +175,8 @@ namespace MP.UI
         {
             UIManager.instance.Get<UILoadingPanel>()
                               .Hide();
+            UIManager.instance.Get<UIReadyGamePlayInRoom>()
+                              .Show();
         }
 
         public void OnJoinRoomFailed(short returnCode, string message)
@@ -193,6 +195,7 @@ namespace MP.UI
         {
             UIManager.instance.Get<UILoadingPanel>()
                               .Hide();
+            Show();
         }
     }
 }

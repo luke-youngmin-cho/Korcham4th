@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using UnityEngine;
 
 namespace MP.Singleton
@@ -20,5 +20,17 @@ namespace MP.Singleton
         }
 
         private static T s_instance;
+
+
+        protected virtual void Awake()
+        {
+            if (s_instance != null)
+            {
+                Destroy(gameObject);
+                return;
+            }
+
+            s_instance = (T)this;
+        }
     }
 }

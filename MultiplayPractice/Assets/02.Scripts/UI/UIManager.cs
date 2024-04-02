@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -109,6 +109,20 @@ namespace MP.UI
             // 이전 팝업의 입력이 먹히게
             if (_popups.Count > 0)
                 _popups.Peek().inputActionEnable = true;
+        }
+
+        /// <summary>
+        /// 전체화면 UI 를 설정
+        /// </summary>
+        public void SetScreen(IUI ui)
+        {
+            for (int i = _screens.Count - 1; i >= 0; i--)
+            {
+                _screens[i].Hide();
+                _screens.RemoveAt(i);
+            }
+
+            _screens.Add(ui);
         }
     }
 }
