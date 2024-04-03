@@ -123,6 +123,7 @@ namespace MP.UI
             }
 
             _screens.Add(ui);
+            ui.inputActionEnable = true;
         }
     }
 }
