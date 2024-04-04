@@ -1,4 +1,5 @@
 using MP.GameElements.Characters;
+using MP.GameElements.InteractingSystem;
 using Photon.Pun;
 using System;
 using System.Collections;
@@ -12,7 +13,17 @@ namespace MP.GameElements
     [RequireComponent(typeof(PhotonView), typeof(PhotonTransformView))]
     public class ClientCharacterController : MonoBehaviour
     {
-        public static Dictionary<int, ClientCharacterController> _spawned = new Dictionary<int, ClientCharacterController>();
+        public static Dictionary<int, ClientCharacterController> spawned = new Dictionary<int, ClientCharacterController>();
+        public static bool TryGetLocal(out ClientCharacterController controller)
+        {
+            if (spawned.TryGetValue(PhotonNetwork.LocalPlayer.ActorNumber, out controller))
+                return true;
+
+            controller = null;
+            return false;
+        }
+
+        public PlayerInteractor interactor { get; private set; }
 
         private PhotonView _view;
         private NavMeshAgent _agent;
@@ -22,12 +33,13 @@ namespace MP.GameElements
 
         private void Awake()
         {
+            interactor = GetComponent<PlayerInteractor>();
             _view = GetComponent<PhotonView>();
             _agent = GetComponent<NavMeshAgent>();
             _animator = GetComponent<Animator>();
             _groundMask = 1 << LayerMask.NameToLayer("Ground");
             _cam = Camera.main;
-            _spawned.Add(_view.OwnerActorNr, this);
+            spawned.Add(_view.OwnerActorNr, this);
         }
 
         private void Start()
@@ -61,6 +73,14 @@ namespace MP.GameElements
         }
 
         public void ChangeState(State newState)
+        {
+            _view.RPC("ChangeStateClientRpc", RpcTarget.Others, newState);
+            _animator.SetInteger("state", (int)newState);
+            _animator.SetBool("isDirty", true);
+        }
+
+        [PunRPC]
+        private void ChangeStateClientRpc(State newState)
         {
             _animator.SetInteger("state", (int)newState);
             _animator.SetBool("isDirty", true);

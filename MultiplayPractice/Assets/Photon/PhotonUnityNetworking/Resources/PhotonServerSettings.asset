@@ -41,6 +41,8 @@ MonoBehaviour:
   - RespawnSpaceship
   - GrabClientRpc
   - UngrabClientRpc
+  - ChangeStateClientRpc
+  - DestroyClientRpc
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1

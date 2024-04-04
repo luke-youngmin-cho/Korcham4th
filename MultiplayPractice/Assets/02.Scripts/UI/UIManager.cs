@@ -125,5 +125,18 @@ namespace MP.UI
             _screens.Add(ui);
             ui.inputActionEnable = true;
         }
+
+        public void PushScreen(IUI ui)
+        {
+            _screens.Remove(ui);
+            _screens.Add(ui);
+            ui.inputActionEnable = true;
+        }
+
+        public void PopScreen(IUI ui)
+        {
+            _screens.Remove(ui);
+            ui.inputActionEnable = false;
+        }
     }
 }

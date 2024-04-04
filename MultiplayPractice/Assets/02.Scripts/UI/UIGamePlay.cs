@@ -1,65 +1,68 @@
-using MP.GameElements;
+using ExitGames.Client.Photon;
 using Photon.Pun;
+using Photon.Realtime;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
-using MP.GameElements.Characters;
-using MP.GameElements.Interactions;
-using System.Collections.Generic;
-using UnityEngine.EventSystems;
-using UnityEngine;
 
 namespace MP.UI
 {
-    public class UIGamePlay : UIScreenBase
+    public class UIGamePlay : UIScreenBase, IInRoomCallbacks
     {
-        private Button _jump;
-        private Button _interaction;
-        private List<RaycastResult> _raycastBuffer = new List<RaycastResult>();
+        private Button _leaveRoom;
+
 
         protected override void Awake()
         {
             base.Awake();
 
-            _jump = transform.Find("Button - Jump").GetComponent<Button>();
-            _interaction = transform.Find("Button - Interaction").GetComponent<Button>();
-            _jump.onClick.AddListener(() =>
+            _leaveRoom = transform.Find("Button - LeaveRoom").GetComponent<Button>();
+            _leaveRoom.onClick.AddListener(() =>
             {
-                if (ClientCharacterController._spawned.TryGetValue(PhotonNetwork.LocalPlayer.ActorNumber,
-                                                                   out ClientCharacterController controller))
+                if (PhotonNetwork.IsMasterClient)
                 {
-                    controller.ChangeState(State.Jump);
-                }
-            });
-            _interaction.onClick.AddListener(() =>
-            {
-                if (ClientCharacterController._spawned.TryGetValue(PhotonNetwork.LocalPlayer.ActorNumber,
-                                                                   out ClientCharacterController controller) &&
-                    controller.TryGetComponent(out PlayerInteractor interactor))
-                {
-                    interactor.TryInteraction();
-                }
-            });
-
-            Show();
-        }
-
-        public override void InputAction()
-        {
-            base.InputAction();
-
-            if (Input.GetMouseButtonDown(0))
-            {
-                _raycastBuffer.Clear();
-
-                // 유저가 월드를 클릭했을때 플레이어를 해당 위치로 이동시킴
-                if (Raycast(_raycastBuffer) == false)
-                {
-                    if (ClientCharacterController._spawned.TryGetValue(PhotonNetwork.LocalPlayer.ActorNumber,
-                                                                       out ClientCharacterController controller))
+                    foreach (var player in PhotonNetwork.PlayerList)
                     {
-                        controller.MoveTo(Input.mousePosition);
+                        if (player.IsMasterClient == false)
+                        {
+                            if (PhotonNetwork.SetMasterClient(player))
+                                break;
+                        }
                     }
                 }
-            }
+
+                PhotonNetwork.LeaveRoom();
+                SceneManager.LoadScene("Lobby");
+            });
+        }
+
+        private void OnEnable()
+        {
+            PhotonNetwork.AddCallbackTarget(this);
+        }
+
+        private void OnDisable()
+        {
+            PhotonNetwork.RemoveCallbackTarget(this);
+        }
+
+        public void OnMasterClientSwitched(Player newMasterClient)
+        {
+        }
+
+        public void OnPlayerEnteredRoom(Player newPlayer)
+        {
+        }
+
+        public void OnPlayerLeftRoom(Player otherPlayer)
+        {
+        }
+
+        public void OnPlayerPropertiesUpdate(Player targetPlayer, Hashtable changedProps)
+        {
+        }
+
+        public void OnRoomPropertiesUpdate(Hashtable propertiesThatChanged)
+        {
         }
     }
 }

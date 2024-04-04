@@ -13,7 +13,14 @@ namespace MP.UI
         {
             base.Show();
 
-            UIManager.instance.SetScreen(this);
+            UIManager.instance.PushScreen(this);
+        }
+
+        public override void Hide()
+        {
+            base.Hide();
+
+            UIManager.instance.PopScreen(this);
         }
     }
 }

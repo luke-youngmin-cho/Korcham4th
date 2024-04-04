@@ -141,6 +141,9 @@ namespace MP.UI
 
             for (int i = 0; i < roomList.Count; i++)
             {
+                if (roomList[i].RemovedFromList)
+                    continue;
+
                 RoomListSlot slot = Instantiate(_roomListSlot, _roomListContent);
                 slot.roomIndex = i;
                 slot.Refresh(roomList[i].Name, roomList[i].PlayerCount, roomList[i].MaxPlayers);

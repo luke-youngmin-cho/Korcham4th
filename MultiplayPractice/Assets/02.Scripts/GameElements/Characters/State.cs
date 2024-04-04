@@ -5,5 +5,6 @@ namespace MP.GameElements.Characters
         None,
         Move,
         Jump,
+        Drink = 101,
     }
 }
